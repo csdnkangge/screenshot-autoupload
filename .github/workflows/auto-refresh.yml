@@ -1,1 +1,21 @@
+name: Auto Refresh CDN
+on:
+  push:
+    paths:
+      - "images/ruyi.png" 
 
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Timestamp
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d_%H%M")
+          echo "更新时间戳: $TIMESTAMP" >> README.md
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          git commit -m "Update timestamp: $TIMESTAMP"
+          git push origin main
+
+      - name: Purge CDN Cache (If Supported)
